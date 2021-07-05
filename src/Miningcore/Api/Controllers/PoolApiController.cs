@@ -575,6 +575,9 @@ namespace Miningcore.Api.Controllers
 
                     stats = await cf.Run(con => statsRepo.GetMinerPerformanceBetweenDailyAsync(con, pool.Id, address, start, end));
                     break;
+
+                default:
+                    throw new ApiException("invalid interval");
             }
 
             // map

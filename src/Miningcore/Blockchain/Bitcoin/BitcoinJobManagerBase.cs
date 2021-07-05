@@ -216,6 +216,8 @@ namespace Miningcore.Blockchain.Bitcoin
                     var peerInfo = await daemon.ExecuteCmdAnyAsync<PeerInfo[]>(logger, BitcoinCommands.GetPeerInfo);
                     var peers = peerInfo.Response;
 
+                    logger.Info(() => $"Daemons has [{peers.Length}] peers connected");
+
                     if(peers != null && peers.Length > 0)
                     {
                         var totalBlocks = peers.Max(x => x.StartingHeight);
@@ -484,7 +486,7 @@ namespace Miningcore.Blockchain.Bitcoin
             PostChainIdentifyConfigure();
 
             // ensure pool owns wallet
-            if(validateAddressResponse is not {IsValid: true})
+            if(validateAddressResponse == null || !validateAddressResponse.IsValid)
                 logger.ThrowLogPoolStartupException($"Daemon reports pool-address '{poolConfig.Address}' as invalid");
 
             isPoS = poolConfig.Template is BitcoinTemplate {IsPseudoPoS: true} || difficultyResponse.Values().Any(x => x.Path == "proof-of-stake");
@@ -497,7 +499,6 @@ namespace Miningcore.Blockchain.Bitcoin
 
                 poolAddressDestination = AddressToDestination(poolConfig.Address, extraPoolConfig?.AddressType);
             }
-
             else
                 poolAddressDestination = new PubKey(poolConfig.PubKey ?? validateAddressResponse.PubKey);
 
@@ -619,7 +620,7 @@ namespace Miningcore.Blockchain.Bitcoin
             var result = await daemon.ExecuteCmdAnyAsync<ValidateAddressResponse>(logger, ct,
                 BitcoinCommands.ValidateAddress, new[] { address });
 
-            return result.Response is {IsValid: true};
+            return result.Response != null && result.Response.IsValid;
         }
 
         public abstract object[] GetSubscriberData(StratumConnection worker);
