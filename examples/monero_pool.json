@@ -50,7 +50,7 @@
       "randomXRealm": "",
       "randomXFlagsOverride": "",
       "randomXFlagsAdd": "",
-      "randomXVMCount": "",
+      "randomXVMCount": "1",
       "rewardRecipients": [
         {
           "address": "475YVJbPHPedudkhrcNp1wDcLMTGYusGPF5fqE7XjnragVLPdqbCHBdZg3dF4dN9hXMjjvGbykS6a77dTAQvGrpiQqHp2eH",
