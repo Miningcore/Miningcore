@@ -162,7 +162,6 @@ namespace Miningcore.Blockchain.Equihash
                         BlockchainStats.NextNetworkTarget = blockTemplate.Target;
                         BlockchainStats.NextNetworkBits = blockTemplate.Bits;
                     }
-
                     else
                     {
                         if(via != null)

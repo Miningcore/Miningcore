@@ -14,17 +14,17 @@ namespace Miningcore.Blockchain.Cryptonote.Configuration
         /// RandomX virtual machine bucket
         /// Defaults to poolId if not specified
         /// </summary>
-        public string RandomXRealm { get; set; }
+        public string RandomXRealm { get; set; } = "xmr";
 
         /// <summary>
         /// Optional override value for RandomX VM Flags (see Native/LibRandomX.cs)
         /// </summary>
-        public JToken RandomXFlagsOverride { get; set; }
+        public JToken RandomXFlagsOverride { get; set; } = "";
 
         /// <summary>
         /// Optional additive value for RandomX VM Flags (see Native/LibRandomX.cs)
         /// </summary>
-        public JToken RandomXFlagsAdd { get; set; }
+        public JToken RandomXFlagsAdd { get; set; } = "";
 
         /// <summary>
         /// Optional value for number of RandomX VMs allocated per generation (new seed hash)

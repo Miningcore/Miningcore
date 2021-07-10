@@ -124,7 +124,6 @@ namespace Miningcore.Mining
 
                                             queue.Post((relays[i].Url, msg));
                                         }
-
                                         else if(clock.Now - lastMessageReceived[i] > reconnectTimeout)
                                         {
                                             // re-create socket

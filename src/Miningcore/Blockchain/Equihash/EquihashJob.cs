@@ -217,7 +217,7 @@ namespace Miningcore.Blockchain.Equihash
             }
         }
 
-        private (Share Share, string BlockHex) ProcessShareInternal(StratumConnection worker, string nonce,
+        protected virtual (Share Share, string BlockHex) ProcessShareInternal(StratumConnection worker, string nonce,
             uint nTime, string solution)
         {
             var context = worker.ContextAs<BitcoinWorkerContext>();

@@ -127,7 +127,6 @@ namespace Miningcore.Blockchain.Cryptonote
                     BlockchainStats.NextNetworkTarget = "";
                     BlockchainStats.NextNetworkBits = "";
                 }
-
                 else
                 {
                     if(via != null)
@@ -250,9 +249,9 @@ namespace Miningcore.Blockchain.Cryptonote
 
             if(poolConfig.EnableInternalStratum == true)
             {
-                randomXRealm = !string.IsNullOrEmpty(extraPoolConfig.RandomXRealm) ? extraPoolConfig.RandomXRealm : poolConfig.Id;
-                randomXFlagsOverride = MakeRandomXFlags(extraPoolConfig.RandomXFlagsOverride);
-                randomXFlagsAdd = MakeRandomXFlags(extraPoolConfig.RandomXFlagsAdd);
+                randomXRealm = !string.IsNullOrEmpty(extraPoolConfig?.RandomXRealm) ? extraPoolConfig.RandomXRealm : poolConfig.Id;
+                randomXFlagsOverride = MakeRandomXFlags(extraPoolConfig?.RandomXFlagsOverride);
+                randomXFlagsAdd = MakeRandomXFlags(extraPoolConfig?.RandomXFlagsAdd);
             }
 
             // extract standard daemon endpoints
@@ -556,7 +555,6 @@ namespace Miningcore.Blockchain.Cryptonote
                         break;
                 }
             }
-
             else
                 networkType = info.IsTestnet ? CryptonoteNetworkType.Test : CryptonoteNetworkType.Main;
 

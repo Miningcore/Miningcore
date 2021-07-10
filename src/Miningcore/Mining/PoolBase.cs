@@ -284,7 +284,6 @@ namespace Miningcore.Mining
                     context.Stats.ValidShares = 0;
                     context.Stats.InvalidShares = 0;
                 }
-
                 else
                 {
                     if(poolConfig.Banning?.Enabled == true &&

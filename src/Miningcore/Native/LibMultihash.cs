@@ -33,10 +33,10 @@ namespace Miningcore.Native
         public static extern void x25x(byte* input, void* output, uint inputLength);
 
         [DllImport("libmultihash", EntryPoint = "verthash_export", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void verthash(byte* input, void* output, int inputLength);
+        public static extern int verthash(byte* input, void* output, int inputLength);
 
         [DllImport("libmultihash", EntryPoint = "verthash_init_export", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void verthash_init(string filename, bool createIfMissing);
+        public static extern int verthash_init(string filename, bool createIfMissing);
 
         [DllImport("libmultihash", EntryPoint = "neoscrypt_export", CallingConvention = CallingConvention.Cdecl)]
         public static extern void neoscrypt(byte* input, void* output, uint inputLength, uint profile);
