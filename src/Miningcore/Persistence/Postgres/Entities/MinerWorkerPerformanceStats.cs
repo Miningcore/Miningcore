@@ -14,5 +14,6 @@ namespace Miningcore.Persistence.Postgres.Entities
         public DateTime Created { get; set; }
 
         public int Partition { get; set; }
+        public int ShareCount { get; set; }
     }
 }

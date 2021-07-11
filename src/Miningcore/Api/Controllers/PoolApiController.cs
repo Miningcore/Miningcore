@@ -564,14 +564,12 @@ namespace Miningcore.Api.Controllers
                     break;
 
                 case SampleRange.Day:
-                    // Time Range Current Day 00:00:00 till 23:59:59
-                    end = end.AddSeconds(-end.Second);
-                    end = end.AddMinutes(-end.Minute);
-                    end = end.AddHours(24 - end.Hour);
+                    // Time Range Current Day (last 24 hours)
                     start = end.AddDays(-1);
-                    end = end.AddSeconds(-1);
+                    
+                    var timeInterval = 300; // Seconds
 
-                    stats = await cf.Run(con => statsRepo.GetMinerPerformanceBetweenHourlyAsync(con, pool.Id, address, start, end));
+                    stats = await cf.Run(con => statsRepo.GetMinerPerformanceAsync(con, pool.Id, address, start, end, timeInterval));
                     break;
 
                 case SampleRange.Month:

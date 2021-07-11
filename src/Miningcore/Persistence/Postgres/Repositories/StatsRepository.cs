@@ -278,6 +278,50 @@ namespace Miningcore.Persistence.Postgres.Repositories
             return tmp;
         }
 
+        public async Task<WorkerPerformanceStatsContainer[]> GetMinerPerformanceAsync(IDbConnection con, string poolId, string miner, DateTime start, DateTime end, int timeInterval)
+        {
+            logger.LogInvoke(new[] { poolId });
+            
+            string query = "SELECT series.minute AS created, worker, hashrate, sharespersecond, coalesce(cnt.amnt,0) AS sharecount " +
+                "FROM ( " +
+                "SELECT worker, AVG(hashrate) AS hashrate, AVG(sharespersecond) AS sharespersecond, count(*) amnt, " +
+                "to_timestamp(floor((extract('epoch' FROM created) / " + timeInterval + ")) * " + timeInterval + ") " +
+                "AT TIME ZONE 'UTC' AS interval_alias " +
+                "FROM minerstats " +
+                "WHERE poolid = @poolId AND miner = @miner AND created >= @start AND created <= @end " +
+                "GROUP BY interval_alias, worker ) AS cnt " +
+                "RIGHT JOIN " +
+                "(SELECT generate_series(min(date_trunc('hour',created)), max(date_trunc('minute', created)), interval '" + timeInterval + "' SECOND) AS minute " +
+                "FROM minerstats " +
+                ") AS series " +
+                "ON series.minute = cnt.interval_alias;";
+
+            var entities = (await con.QueryAsync<Entities.MinerWorkerPerformanceStats>(query, new { poolId, miner, start, end }))
+                .ToArray();
+
+            // ensure worker is not null
+            //foreach(var entity in entities)
+            //    entity.Worker ??= string.Empty;
+
+            // group
+            var entitiesByDate = entities
+                .GroupBy(x => x.Created);
+
+            var tmp = entitiesByDate.Select(x => new WorkerPerformanceStatsContainer
+            {
+                Created = x.Key,
+                Workers = x.ToDictionary(y => y.Worker ?? string.Empty, y => new WorkerPerformanceStats
+                {
+                    Hashrate = y.Hashrate,
+                    SharesPerSecond = y.SharesPerSecond,
+                    ShareCount = y.ShareCount
+                })
+            })
+            .ToArray();
+
+            return tmp;
+        }
+
         public async Task<WorkerPerformanceStatsContainer[]> GetMinerPerformanceBetweenHourlyAsync(IDbConnection con, string poolId, string miner, DateTime start, DateTime end)
         {
             logger.LogInvoke(new[] { poolId });
