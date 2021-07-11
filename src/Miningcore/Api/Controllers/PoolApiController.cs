@@ -543,35 +543,44 @@ namespace Miningcore.Api.Controllers
 
             switch(mode)
             {
-                case SampleRange.Hour:
-                    end = end.AddSeconds(-end.Second);
+                case SampleRange.Minute:
+                    // Time Range Current Minute xx:xx:00 till xx:xx:59
+                    end = end.AddSeconds(60 - end.Second);
+                    start = end.AddMinutes(-1);
+                    end = end.AddSeconds(-1);
 
+                    stats = await cf.Run(con => statsRepo.GetMinerPerformanceBetweenMinutelyAsync(con, pool.Id, address, start, end));
+                    break;
+
+                case SampleRange.Hour:
+                    // Time Range Current Hour xx:00:00 till xx:59:59
+                    end = DateTime.Now;
+                    end = end.AddSeconds(-end.Second);
+                    end = end.AddMinutes(60 - end.Minute);
                     start = end.AddHours(-1);
+                    end = end.AddSeconds(-1);
 
                     stats = await cf.Run(con => statsRepo.GetMinerPerformanceBetweenThreeMinutelyAsync(con, pool.Id, address, start, end));
                     break;
 
                 case SampleRange.Day:
-                    // set range
-                    if(end.Minute < 30)
-                        end = end.AddHours(-1);
-
-                    end = end.AddMinutes(-end.Minute);
+                    // Time Range Current Day 00:00:00 till 23:59:59
                     end = end.AddSeconds(-end.Second);
-
+                    end = end.AddMinutes(-end.Minute);
+                    end = end.AddHours(24 - end.Hour);
                     start = end.AddDays(-1);
+                    end = end.AddSeconds(-1);
 
                     stats = await cf.Run(con => statsRepo.GetMinerPerformanceBetweenHourlyAsync(con, pool.Id, address, start, end));
                     break;
 
                 case SampleRange.Month:
-                    if(end.Hour < 12)
-                        end = end.AddDays(-1);
-
+                    // Time Range Current Month First Day 00:00:00 till Last day 23:59:59
                     end = end.Date;
-
-                    // set range
-                    start = end.AddMonths(-1);
+                    end = end.AddDays(-end.Day + 1);
+                    start = end;
+                    end = start.AddMonths(1);
+                    end = end.AddSeconds(-1);
 
                     stats = await cf.Run(con => statsRepo.GetMinerPerformanceBetweenDailyAsync(con, pool.Id, address, start, end));
                     break;
