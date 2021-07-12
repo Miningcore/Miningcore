@@ -333,8 +333,7 @@ namespace Miningcore.Persistence.Postgres.Repositories
                 Workers = x.ToDictionary(y => y.Worker ?? string.Empty, y => new WorkerPerformanceStats
                 {
                     Hashrate = y.Hashrate,
-                    SharesPerSecond = y.SharesPerSecond,
-                    ShareCount = y.ShareCount
+                    SharesPerSecond = y.SharesPerSecond
                 })
             })
             .ToArray();
