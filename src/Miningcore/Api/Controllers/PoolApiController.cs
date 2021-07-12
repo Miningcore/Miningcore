@@ -601,7 +601,7 @@ namespace Miningcore.Api.Controllers
                 interval = 1;
 
             // Convert Minutes to Seconds
-            interval = interval * 60;
+            // interval = interval * 60;
             stats = await cf.Run(con => statsRepo.GetMinerPerformanceAsync(con, pool.Id, address, start, end, interval));
 
             /*
