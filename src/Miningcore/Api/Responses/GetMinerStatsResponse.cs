@@ -14,7 +14,6 @@ namespace Miningcore.Api.Responses
     {
         public double Hashrate { get; set; }
         public double SharesPerSecond { get; set; }
-        public double ShareCount { get; set; }
     }
 
     public class WorkerPerformanceStatsContainer
