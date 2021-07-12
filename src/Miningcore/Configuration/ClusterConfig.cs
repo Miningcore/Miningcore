@@ -584,6 +584,26 @@ namespace Miningcore.Configuration
         public string SSLPassword { get; set; }
     }
 
+    public class ApiSampleInterval
+    {
+        /// <summary>
+        /// Pool Stats Time Range in Days
+        /// </summary>
+        public int PoolStatsTimeRange { get; set; }
+        /// <summary>
+        /// Pool Stats Time Interval in Minutes
+        /// </summary>
+        public int PoolStatsSampleInterval { get; set; }
+        /// <summary>
+        /// Miner Stats Time Range in Days
+        /// </summary>
+        public int MinerStatsTimeRange { get; set; }
+        /// <summary>
+        /// Miner Stats Sample Interval in Minutes
+        /// </summary>
+        public int MinerStatsSampleInterval { get; set; }
+    }
+
     public partial class ApiConfig
     {
         public bool Enabled { get; set; }
@@ -593,6 +613,9 @@ namespace Miningcore.Configuration
         public ApiSSLConfig SSLConfig { get; set; }
 
         public ApiRateLimitConfig RateLimiting { get; set; }
+
+        public ApiSampleInterval SampleInterval { get; set; }
+
 
         /// <summary>
         /// Port for admin-apis

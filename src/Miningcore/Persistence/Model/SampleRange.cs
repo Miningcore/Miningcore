@@ -6,9 +6,10 @@ namespace Miningcore.Persistence.Repositories
 {
     public enum SampleRange
     {
-        Month = 1,
-        Day,
-        Hour,
-        Minute,
+        Hour  = 1,
+        Day   = 2,
+        Month = 3,
+        Year  = 4,
+        All   = 5
     }
 }

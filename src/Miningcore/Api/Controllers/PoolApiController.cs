@@ -139,7 +139,8 @@ namespace Miningcore.Api.Controllers
         }
 
         [HttpGet("{poolId}/performance")]
-        public async Task<GetPoolStatsResponse> GetPoolPerformanceAsync(string poolId,
+        public async Task<GetPoolStatsResponse> GetPoolPerformanceAsync(
+            string poolId,
             [FromQuery(Name = "r")] SampleRange range = SampleRange.Day,
             [FromQuery(Name = "i")] SampleInterval interval = SampleInterval.Hour)
         {
@@ -176,7 +177,9 @@ namespace Miningcore.Api.Controllers
 
         [HttpGet("{poolId}/miners")]
         public async Task<MinerPerformanceStats[]> PagePoolMinersAsync(
-            string poolId, [FromQuery] int page, [FromQuery] int pageSize = 15)
+            string poolId,
+            [FromQuery] int page,
+            [FromQuery] int pageSize = 15)
         {
             var pool = GetPool(poolId);
 
@@ -194,7 +197,10 @@ namespace Miningcore.Api.Controllers
 
         [HttpGet("{poolId}/blocks")]
         public async Task<Responses.Block[]> PagePoolBlocksAsync(
-            string poolId, [FromQuery] int page, [FromQuery] int pageSize = 15, [FromQuery] BlockStatus[] state = null)
+            string poolId,
+            [FromQuery] int page,
+            [FromQuery] int pageSize = 15,
+            [FromQuery] BlockStatus[] state = null)
         {
             var pool = GetPool(poolId);
 
@@ -231,7 +237,10 @@ namespace Miningcore.Api.Controllers
 
         [HttpGet("/api/v2/pools/{poolId}/blocks")]
         public async Task<PagedResultResponse<Responses.Block[]>> PagePoolBlocksV2Async(
-            string poolId, [FromQuery] int page, [FromQuery] int pageSize = 15, [FromQuery] BlockStatus[] state = null)
+            string poolId,
+            [FromQuery] int page,
+            [FromQuery] int pageSize = 15,
+            [FromQuery] BlockStatus[] state = null)
         {
             var pool = GetPool(poolId);
 
@@ -271,7 +280,9 @@ namespace Miningcore.Api.Controllers
 
         [HttpGet("{poolId}/payments")]
         public async Task<Responses.Payment[]> PagePoolPaymentsAsync(
-            string poolId, [FromQuery] int page, [FromQuery] int pageSize = 15)
+            string poolId,
+            [FromQuery] int page,
+            [FromQuery] int pageSize = 15)
         {
             var pool = GetPool(poolId);
 
@@ -300,7 +311,9 @@ namespace Miningcore.Api.Controllers
 
         [HttpGet("/api/v2/pools/{poolId}/payments")]
         public async Task<PagedResultResponse<Responses.Payment[]>> PagePoolPaymentsV2Async(
-            string poolId, [FromQuery] int page, [FromQuery] int pageSize = 15)
+            string poolId,
+            [FromQuery] int page,
+            [FromQuery] int pageSize = 15)
         {
             var pool = GetPool(poolId);
 
@@ -330,12 +343,16 @@ namespace Miningcore.Api.Controllers
             return response;
         }
 
+
         [HttpGet("{poolId}/miners/{address}")]
         public async Task<Responses.MinerStats> GetMinerInfoAsync(
-            string poolId, string address, [FromQuery] SampleRange perfMode = SampleRange.Day)
+            string poolId,
+            string address,
+            [FromQuery(Name = "r")] int range = 1,
+            [FromQuery(Name = "i")] int interval = 0)
         {
             var pool = GetPool(poolId);
-
+            
             if(string.IsNullOrEmpty(address))
                 throw new ApiException("Invalid or missing miner address", HttpStatusCode.NotFound);
 
@@ -360,7 +377,7 @@ namespace Miningcore.Api.Controllers
                         stats.LastPaymentLink = string.Format(baseUrl, statsResult.LastPayment.TransactionConfirmationData);
                 }
 
-                stats.PerformanceSamples = await GetMinerPerformanceInternal(perfMode, pool, address);
+                stats.PerformanceSamples = await GetMinerPerformanceInternal(range, pool, address, interval);
             }
 
             return stats;
@@ -368,7 +385,10 @@ namespace Miningcore.Api.Controllers
 
         [HttpGet("{poolId}/miners/{address}/payments")]
         public async Task<Responses.Payment[]> PageMinerPaymentsAsync(
-            string poolId, string address, [FromQuery] int page, [FromQuery] int pageSize = 15)
+            string poolId,
+            string address,
+            [FromQuery] int page,
+            [FromQuery] int pageSize = 15)
         {
             var pool = GetPool(poolId);
 
@@ -400,7 +420,10 @@ namespace Miningcore.Api.Controllers
 
         [HttpGet("/api/v2/pools/{poolId}/miners/{address}/payments")]
         public async Task<PagedResultResponse<Responses.Payment[]>> PageMinerPaymentsV2Async(
-            string poolId, string address, [FromQuery] int page, [FromQuery] int pageSize = 15)
+            string poolId,
+            string address,
+            [FromQuery] int page,
+            [FromQuery] int pageSize = 15)
         {
             var pool = GetPool(poolId);
 
@@ -435,7 +458,10 @@ namespace Miningcore.Api.Controllers
 
         [HttpGet("{poolId}/miners/{address}/balancechanges")]
         public async Task<Responses.BalanceChange[]> PageMinerBalanceChangesAsync(
-            string poolId, string address, [FromQuery] int page, [FromQuery] int pageSize = 15)
+            string poolId,
+            string address,
+            [FromQuery] int page,
+            [FromQuery] int pageSize = 15)
         {
             var pool = GetPool(poolId);
 
@@ -452,7 +478,10 @@ namespace Miningcore.Api.Controllers
 
         [HttpGet("/api/v2/pools/{poolId}/miners/{address}/balancechanges")]
         public async Task<PagedResultResponse<Responses.BalanceChange[]>> PageMinerBalanceChangesV2Async(
-            string poolId, string address, [FromQuery] int page, [FromQuery] int pageSize = 15)
+            string poolId,
+            string address,
+            [FromQuery] int page,
+            [FromQuery] int pageSize = 15)
         {
             var pool = GetPool(poolId);
 
@@ -472,7 +501,10 @@ namespace Miningcore.Api.Controllers
 
         [HttpGet("{poolId}/miners/{address}/earnings/daily")]
         public async Task<AmountByDate[]> PageMinerEarningsByDayAsync(
-            string poolId, string address, [FromQuery] int page, [FromQuery] int pageSize = 15)
+            string poolId,
+            string address,
+            [FromQuery] int page,
+            [FromQuery] int pageSize = 15)
         {
             var pool = GetPool(poolId);
 
@@ -488,7 +520,10 @@ namespace Miningcore.Api.Controllers
 
         [HttpGet("/api/v2/pools/{poolId}/miners/{address}/earnings/daily")]
         public async Task<PagedResultResponse<AmountByDate[]>> PageMinerEarningsByDayV2Async(
-            string poolId, string address, [FromQuery] int page, [FromQuery] int pageSize = 15)
+            string poolId,
+            string address,
+            [FromQuery] int page,
+            [FromQuery] int pageSize = 15)
         {
             var pool = GetPool(poolId);
 
@@ -507,14 +542,17 @@ namespace Miningcore.Api.Controllers
 
         [HttpGet("{poolId}/miners/{address}/performance")]
         public async Task<Responses.WorkerPerformanceStatsContainer[]> GetMinerPerformanceAsync(
-            string poolId, string address, [FromQuery] SampleRange mode = SampleRange.Day)
+            string poolId,
+            string address,
+            [FromQuery(Name = "r")] int range = 1,
+            [FromQuery(Name = "i")] int interval = 0)
         {
             var pool = GetPool(poolId);
 
             if(string.IsNullOrEmpty(address))
                 throw new ApiException("Invalid or missing miner address", HttpStatusCode.NotFound);
 
-            var result = await GetMinerPerformanceInternal(mode, pool, address);
+            var result = await GetMinerPerformanceInternal(range, pool, address, interval);
 
             return result;
         }
@@ -535,57 +573,82 @@ namespace Miningcore.Api.Controllers
         }
 
         private async Task<Responses.WorkerPerformanceStatsContainer[]> GetMinerPerformanceInternal(
-            SampleRange mode, PoolConfig pool, string address)
+            int range,
+            PoolConfig pool,
+            string address,
+            int interval)
         {
             Persistence.Model.Projections.WorkerPerformanceStatsContainer[] stats = null;
             var end = clock.Now;
             DateTime start;
 
-            switch(mode)
+            start = end.AddDays(- range);
+
+            if(interval == 0)
             {
-                case SampleRange.Minute:
-                    // Time Range Current Minute xx:xx:00 till xx:xx:59
-                    end = end.AddSeconds(60 - end.Second);
-                    start = end.AddMinutes(-1);
-                    end = end.AddSeconds(-1);
+                int configMinerSampleInterval = clusterConfig.Api.SampleInterval.MinerStatsSampleInterval;
+                if(configMinerSampleInterval != 0)
+                    interval = configMinerSampleInterval;
+                else
+                    interval = 60;
+            }
 
-                    stats = await cf.Run(con => statsRepo.GetMinerPerformanceBetweenMinutelyAsync(con, pool.Id, address, start, end));
-                    break;
+            // Maximum interval 1440 minutes (1 Day)
+            if(interval >= 1440)
+                interval = 1440;
+            // Minimum interval 1 minute
+            if(interval <= 1)
+                interval = 1;
 
+            // Convert Minutes to Seconds
+            interval = interval * 60;
+            stats = await cf.Run(con => statsRepo.GetMinerPerformanceAsync(con, pool.Id, address, start, end, interval));
+
+            /*
+            switch(range)
+            {
                 case SampleRange.Hour:
-                    // Time Range Current Hour xx:00:00 till xx:59:59
-                    end = DateTime.Now;
-                    end = end.AddSeconds(-end.Second);
-                    end = end.AddMinutes(60 - end.Minute);
+                    // Time Range Hour = now - 1 Hour
                     start = end.AddHours(-1);
-                    end = end.AddSeconds(-1);
-
-                    stats = await cf.Run(con => statsRepo.GetMinerPerformanceBetweenThreeMinutelyAsync(con, pool.Id, address, start, end));
+                    
+                    stats = await cf.Run(con => statsRepo.GetMinerPerformanceAsync(con, pool.Id, address, start, end, _sampleInterval));
+                    //GetMinerPerformanceBetweenThreeMinutelyAsync(con, pool.Id, address, start, end));
                     break;
 
                 case SampleRange.Day:
-                    // Time Range Current Day (last 24 hours)
+                    // Time Range Day = now - 24 hours
                     start = end.AddDays(-1);
-                    
-                    var timeInterval = 300; // Seconds
 
-                    stats = await cf.Run(con => statsRepo.GetMinerPerformanceAsync(con, pool.Id, address, start, end, timeInterval));
+                    stats = await cf.Run(con => statsRepo.GetMinerPerformanceAsync(con, pool.Id, address, start, end, _sampleInterval));
                     break;
 
                 case SampleRange.Month:
-                    // Time Range Current Month First Day 00:00:00 till Last day 23:59:59
+                    // Time Range Month = now -1 month
                     end = end.Date;
-                    end = end.AddDays(-end.Day + 1);
-                    start = end;
-                    end = start.AddMonths(1);
-                    end = end.AddSeconds(-1);
+                    start = end.AddMonths(-1);
+                    
+                    stats = await cf.Run(con => statsRepo.GetMinerPerformanceAsync(con, pool.Id, address, start, end, _sampleInterval));
+                    //GetMinerPerformanceBetweenDailyAsync(con, pool.Id, address, start, end));
+                    break;
 
-                    stats = await cf.Run(con => statsRepo.GetMinerPerformanceBetweenDailyAsync(con, pool.Id, address, start, end));
+                case SampleRange.Year:
+                    end = end.Date;
+                    start = end.AddYears(-1);
+
+                    stats = await cf.Run(con => statsRepo.GetMinerPerformanceAsync(con, pool.Id, address, start, end, _sampleInterval));
+                    break;
+
+                case SampleRange.All:
+                    end = end.Date;
+                    start = end.AddYears(-10);
+
+                    stats = await cf.Run(con => statsRepo.GetMinerPerformanceAsync(con, pool.Id, address, start, end, _sampleInterval));
                     break;
 
                 default:
                     throw new ApiException("invalid interval");
             }
+            */
 
             // map
             var result = mapper.Map<Responses.WorkerPerformanceStatsContainer[]>(stats);

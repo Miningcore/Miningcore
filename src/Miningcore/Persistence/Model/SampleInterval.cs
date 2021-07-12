@@ -6,9 +6,7 @@ namespace Miningcore.Persistence.Repositories
 {
     public enum SampleInterval
     {
-        Month =1,
+        Hour = 1,
         Day,
-        Hour,
-        Minute,
     }
 }
