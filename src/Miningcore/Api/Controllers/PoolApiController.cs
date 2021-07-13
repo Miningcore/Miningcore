@@ -349,7 +349,7 @@ namespace Miningcore.Api.Controllers
             string poolId,
             string address,
             [FromQuery(Name = "r")] int range = 1,
-            [FromQuery(Name = "i")] int interval = 0)
+            [FromQuery(Name = "i")] int interval = 60)
         {
             var pool = GetPool(poolId);
             
@@ -545,7 +545,7 @@ namespace Miningcore.Api.Controllers
             string poolId,
             string address,
             [FromQuery(Name = "r")] int range = 1,
-            [FromQuery(Name = "i")] int interval = 0)
+            [FromQuery(Name = "i")] int interval = 60)
         {
             var pool = GetPool(poolId);
 
@@ -584,13 +584,11 @@ namespace Miningcore.Api.Controllers
 
             start = end.AddDays(- range);
 
-            if(interval == 0)
+            if(interval == 60)
             {
                 int configMinerSampleInterval = clusterConfig.Api.SampleInterval.MinerStatsSampleInterval;
                 if(configMinerSampleInterval != 0)
                     interval = configMinerSampleInterval;
-                else
-                    interval = 60;
             }
 
             // Maximum interval 1440 minutes (1 Day)
@@ -600,8 +598,6 @@ namespace Miningcore.Api.Controllers
             if(interval <= 1)
                 interval = 1;
 
-            // Convert Minutes to Seconds
-            // interval = interval * 60;
             stats = await cf.Run(con => statsRepo.GetMinerPerformanceAsync(con, pool.Id, address, start, end, interval));
 
             /*
