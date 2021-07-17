@@ -584,12 +584,14 @@ namespace Miningcore.Api.Controllers
 
             start = end.AddDays(- range);
 
+            /*
             if(interval == 60)
             {
                 int configMinerSampleInterval = clusterConfig.Api.SampleInterval.MinerStatsSampleInterval;
                 if(configMinerSampleInterval != 0)
                     interval = configMinerSampleInterval;
             }
+            */
 
             // Maximum interval 1440 minutes (1 Day)
             if(interval >= 1440)
@@ -597,9 +599,10 @@ namespace Miningcore.Api.Controllers
             // Minimum interval 1 minute
             if(interval <= 1)
                 interval = 1;
+            
 
             stats = await cf.Run(con => statsRepo.GetMinerPerformanceAsync(con, pool.Id, address, start, end, interval));
-
+            
             /*
             switch(range)
             {

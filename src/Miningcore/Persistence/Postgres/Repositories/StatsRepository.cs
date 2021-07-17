@@ -282,7 +282,7 @@ namespace Miningcore.Persistence.Postgres.Repositories
         {
             logger.LogInvoke(new[] { poolId });
             
-            string query1 = "SELECT series.minute AS created, worker, hashrate, sharespersecond, coalesce(cnt.amnt,0) AS sharecount " +
+            string query = "SELECT series.minute AS created, worker, hashrate, sharespersecond, coalesce(cnt.amnt,0) AS sharecount " +
                 "FROM ( " +
                 "SELECT worker, AVG(hashrate) AS hashrate, AVG(sharespersecond) AS sharespersecond, count(*) amnt, " +
                 "to_timestamp(floor((extract('epoch' FROM created) / " + timeInterval + ")) * " + timeInterval + ") " +
@@ -296,7 +296,7 @@ namespace Miningcore.Persistence.Postgres.Repositories
                 ") AS series " +
                 "ON series.minute = cnt.interval_alias;";
 
-            string query = "SELECT * FROM( "+
+            string query1 = "SELECT * FROM( "+
                 " SELECT miner, generate_series(min(date_trunc('hour', created)), max(date_trunc('minute', created)), interval '" + timeInterval + " min') AS created " +
                 " FROM   minerstats " +
                 " WHERE  poolid   = @poolId " +
@@ -320,8 +320,8 @@ namespace Miningcore.Persistence.Postgres.Repositories
                 .ToArray();
 
             // ensure worker is not null
-            //foreach(var entity in entities)
-            //    entity.Worker ??= string.Empty;
+            foreach(var entity in entities)
+                entity.Worker ??= string.Empty;
 
             // group
             var entitiesByDate = entities
